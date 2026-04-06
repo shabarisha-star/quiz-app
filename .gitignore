@@ -1,0 +1,38 @@
+# Backend
+Backend/quizapp/target/
+Backend/quizapp/.classpath
+Backend/quizapp/.project
+Backend/quizapp/.settings/
+Backend/quizapp/*.jar
+Backend/quizapp/logs/
+Backend/quizapp/.mvn/wrapper/maven-wrapper.jar
+
+# Frontend
+quiz-frontend/node_modules/
+quiz-frontend/dist/
+quiz-frontend/build/
+quiz-frontend/.cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.iml
+*.iws
+*.ipr
+
+# OS
+.DS_Store
+Thumbs.db
+*.log
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Misc
+*.pid
+*.seed
+*.pid.lock
