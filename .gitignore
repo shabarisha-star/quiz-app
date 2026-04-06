@@ -36,3 +36,12 @@ Thumbs.db
 *.pid
 *.seed
 *.pid.lock
+
+
+node_modules/
+target/
+.env
+dist/
+build/
+*.log
+.vscode/
