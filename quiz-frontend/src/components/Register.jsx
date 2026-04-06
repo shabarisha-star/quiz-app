@@ -33,7 +33,8 @@ function Register({ setPage }) {
       await API.post("/auth/register", { username, password });
       setSuccess("Registration successful! Please log in.");
       setTimeout(() => setPage("login"), 2000);
-    } catch (err) {
+    } catch (error) {
+      console.error(error);
       setError("Registration failed. Username may already exist.");
     } finally {
       setLoading(false);

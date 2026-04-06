@@ -5,6 +5,7 @@ import com.quizapp.quizapp.entity.UserEntity;
 import com.quizapp.quizapp.exception.ResourceNotFoundException;
 import com.quizapp.quizapp.exception.UnauthorizedException;
 import com.quizapp.quizapp.repository.UserRepository;
+import com.quizapp.quizapp.service.ResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -61,5 +62,19 @@ public class UserService {
     
     public boolean existsById(Long id) {
         return userRepository.existsById(id);
+    }
+    
+    public UserEntity createAdminUser(String username, String password, String email) {
+        if (existsByUsername(username)) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+        
+        UserEntity user = new UserEntity();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setEmail(email);
+        user.setRole("ADMIN");
+        
+        return userRepository.save(user);
     }
 }

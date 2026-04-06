@@ -11,7 +11,8 @@ function Leaderboard() {
       try {
         const res = await API.get("/result/leaderboard");
         setData(res.data);
-      } catch (err) {
+      } catch (error) {
+        console.error(error);
         setError("Failed to load leaderboard");
       } finally {
         setLoading(false);

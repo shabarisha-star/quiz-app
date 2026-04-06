@@ -27,9 +27,9 @@ public class AuthService {
         user.setUsername(username);
         user.setPassword(encoder.encode(password));
 
-        // First user is SUPER_ADMIN
+        // First user is ADMIN
         if (repo.count() == 0) {
-            user.setRole("SUPER_ADMIN");
+            user.setRole("ADMIN");
         } else {
             user.setRole("USER");
         }

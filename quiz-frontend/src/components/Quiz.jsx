@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import API from "../api/api";
 import { CheckCircle, XCircle, Clock } from "lucide-react";
 import toast from "react-hot-toast";
@@ -19,7 +19,8 @@ function Quiz({ quizId, setQuizId }) {
       try {
         const res = await API.get(`/quiz/${quizId}`);
         setQuiz(res.data);
-      } catch (err) {
+      } catch (error) {
+        console.error(error);
         setError("Failed to load quiz");
       } finally {
         setLoading(false);
@@ -29,21 +30,11 @@ function Quiz({ quizId, setQuizId }) {
     fetchQuiz();
   }, [quizId]);
 
-  useEffect(() => {
-    if (timeLeft > 0 && quiz && !reviewMode) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-      return () => clearTimeout(timer);
-    } else if (timeLeft === 0 && quiz && !reviewMode) {
-      handleSubmit();
+  const handleSubmit = useCallback(async () => {
+    if (!quiz) {
+      return;
     }
-  }, [timeLeft, quiz, reviewMode]);
 
-  const handleAnswer = (qid, option) => {
-    if (reviewMode) return; // Prevent changes in review mode
-    setAnswers(prev => ({ ...prev, [qid]: option }));
-  };
-
-  const handleSubmit = async () => {
     if (Object.keys(answers).length !== quiz.questions.length && !reviewMode) {
       if (!confirm("You haven't answered all questions. Submit anyway?")) {
         return;
@@ -64,11 +55,28 @@ function Quiz({ quizId, setQuizId }) {
       setTimeTaken(timeSpent);
       setReviewMode(true);
       toast.success(`Quiz submitted! Score: ${res.data.score}/${quiz.questions.length}`);
-    } catch (err) {
+    } catch (error) {
+      console.error(error);
       toast.error("Failed to submit quiz");
     } finally {
       setSubmitting(false);
     }
+  }, [answers, quiz, quizId, reviewMode, timeTaken]);
+
+  useEffect(() => {
+    if (timeLeft > 0 && quiz && !reviewMode) {
+      const timer = setTimeout(() => setTimeLeft((prev) => prev - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+
+    if (timeLeft === 0 && quiz && !reviewMode) {
+      handleSubmit();
+    }
+  }, [timeLeft, quiz, reviewMode, handleSubmit]);
+
+  const handleAnswer = (qid, option) => {
+    if (reviewMode) return; // Prevent changes in review mode
+    setAnswers(prev => ({ ...prev, [qid]: option }));
   };
 
   const formatTime = (seconds) => {

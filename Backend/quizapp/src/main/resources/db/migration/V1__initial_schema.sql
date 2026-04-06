@@ -67,9 +67,9 @@ CREATE TABLE IF NOT EXISTS result (
     INDEX idx_percentage (percentage)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Add admin user
+-- Add admin user (plain-text password for seeded admin)
 INSERT INTO user_entity (username, password, email, role) 
-VALUES ('admin', '$2a$10$slYQmyNdGzin7olVVCQvuOcK/RRUK4HwWmLM8pSVZ7Nm4qEVjhLxu', 'admin@quizapp.com', 'ADMIN')
+VALUES ('admin', '{noop}admin', 'admin@quizapp.com', 'ADMIN')
 ON DUPLICATE KEY UPDATE id=id;
 
 -- Create indexes for optimization

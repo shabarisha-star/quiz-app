@@ -17,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
@@ -49,10 +51,12 @@ public class SecurityConfig {
 
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/quiz", "/quiz/create").hasAnyRole("ADMIN", "SUPER_ADMIN")
+                .requestMatchers("/health").permitAll() // Allow public access to health endpoint
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/quiz", "/quiz/create").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/quiz/submit/**").authenticated()
-                .requestMatchers(HttpMethod.PUT, "/quiz/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/quiz/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/quiz/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/quiz/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/quiz").authenticated()
                 .requestMatchers(HttpMethod.GET, "/quiz/my").authenticated()
                 .requestMatchers(HttpMethod.GET, "/quiz/**").authenticated()

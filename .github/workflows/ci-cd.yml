@@ -26,6 +26,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    - name: Cache Maven dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('Backend/quizapp/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
     
     - name: Set up JDK 21
       uses: actions/setup-java@v3
@@ -48,7 +56,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    
+
+    - name: Cache npm dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-npm-${{ hashFiles('quiz-frontend/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-npm-
+
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:

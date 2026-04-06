@@ -12,33 +12,30 @@ import Profile from "./components/Profile";
 import { Toaster } from "react-hot-toast";
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(() => Boolean(localStorage.getItem("token")));
   const [quizId, setQuizId] = useState(null);
   const [page, setPage] = useState("login");
-  const [userRole, setUserRole] = useState("USER");
-  const [darkMode, setDarkMode] = useState(false);
+  const [userRole, setUserRole] = useState(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      return "USER";
+    }
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.role ? payload.role.replace(/^ROLE_/, "") : "USER";
+    } catch {
+      return "USER";
+    }
+  });
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem("darkMode") === "true");
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setLoggedIn(true);
-      // Decode token to get role (simplified)
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        const role = payload.role ? payload.role.replace(/^ROLE_/, "") : "USER";
-        setUserRole(role);
-      } catch (e) {
-        setUserRole("USER");
-      }
-    }
-
-    // Check dark mode preference
-    const dark = localStorage.getItem("darkMode") === "true";
-    setDarkMode(dark);
-    if (dark) {
+    if (darkMode) {
       document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
     }
-  }, []);
+  }, [darkMode]);
 
   const toggleDarkMode = () => {
     const newDark = !darkMode;
@@ -78,7 +75,7 @@ function App() {
           <QuizList setQuizId={setQuizId} />
         )}
 
-        {(page === "admin" && (userRole === "ADMIN" || userRole === "SUPER_ADMIN")) && (
+        {(page === "admin" && userRole === "ADMIN") && (
           <AdminDashboard />
         )}
 

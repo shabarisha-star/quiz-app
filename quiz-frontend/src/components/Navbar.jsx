@@ -29,7 +29,7 @@ function Navbar({ page, setPage, setLoggedIn, userRole, darkMode, toggleDarkMode
               Home
             </button>
 
-            {(userRole === "ADMIN" || userRole === "SUPER_ADMIN") && (
+            {userRole === "ADMIN" && (
               <button
                 onClick={() => setPage("admin")}
                 className={`px-3 py-2 rounded-md text-sm font-medium ${

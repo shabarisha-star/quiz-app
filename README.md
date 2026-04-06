@@ -50,7 +50,7 @@ A modern full-stack quiz application with real-time quiz management, leaderboard
 
 ### Backend
 - **Framework**: Spring Boot 4.1.0
-- **Language**: Java 21
+- **Language**: Java 21 or later (tested on Java 25)
 - **Database**: MySQL 8.0
 - **Authentication**: JWT (JSON Web Tokens)
 - **Security**: Spring Security
@@ -256,14 +256,20 @@ docker-compose logs mysql
 
 ### Authentication Endpoints
 
-#### Register User
+#### Health Check
 ```http
-POST /api/auth/register
-Content-Type: application/json
+GET /api/health
+```
 
+**Response**:
+```json
 {
-  "username": "john_doe",
-  "password": "password123"
+  "status": "UP",
+  "timestamp": "2026-04-06T10:30:00",
+  "service": "QuizApp Backend",
+  "database": "UP",
+  "version": "1.0.0",
+  "java.version": "25.0.2"
 }
 ```
 
@@ -321,6 +327,12 @@ Authorization: Bearer {token}
 }
 ```
 
+#### Get My Quizzes (Admin Only)
+```http
+GET /api/quiz/my
+Authorization: Bearer {token}
+```
+
 #### Update Quiz (Admin Only)
 ```http
 PUT /api/quiz/{id}
@@ -335,12 +347,17 @@ Authorization: Bearer {token}
 
 #### Submit Quiz
 ```http
-POST /api/quiz/{id}/submit
+POST /api/quiz/submit/{id}
 Content-Type: application/json
 Authorization: Bearer {token}
 
 {
-  "answers": [0, 1, 2, 3]
+  "answers": {
+    "1": "A",
+    "2": "B",
+    "3": "C"
+  },
+  "timeTaken": 120
 }
 ```
 
@@ -348,19 +365,19 @@ Authorization: Bearer {token}
 
 #### Get User Results
 ```http
-GET /api/results/user
+GET /api/result/my
 Authorization: Bearer {token}
 ```
 
 #### Get Leaderboard
 ```http
-GET /api/results/leaderboard
+GET /api/result/leaderboard
 Authorization: Bearer {token}
 ```
 
 #### Get User Statistics
 ```http
-GET /api/results/user/stats
+GET /api/result/stats
 Authorization: Bearer {token}
 ```
 
@@ -413,7 +430,31 @@ cd Backend/quizapp
 ### Frontend Tests
 ```bash
 cd quiz-frontend
+
+# Run tests in watch mode
 npm test
+
+# Run tests once
+npm run test:run
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run tests with UI
+npm run test:ui
+
+# Lint and build verification
+npm run lint
+npm run build
+```
+
+### Health Check
+```bash
+# Check backend health
+curl http://localhost:8080/api/health
+
+# Check with Docker
+curl http://localhost/api/health
 ```
 
 ## 🔄 Development Workflow
@@ -446,6 +487,20 @@ docker ps | grep mysql
 docker-compose down -v
 docker-compose up -d mysql
 ```
+
+## 📁 Repository Governance
+
+This repository includes professional project governance and collaboration files:
+- `CODE_OF_CONDUCT.md`
+- `CONTRIBUTING.md`
+- `CHANGELOG.md`
+- `LICENSE`
+- `.github/pull_request_template.md`
+- `.github/ISSUE_TEMPLATE/bug_report.md`
+- `.github/ISSUE_TEMPLATE/feature_request.md`
+- `.github/SECURITY.md`
+
+Use the issue and PR templates when contributing, and follow the contribution workflow described above.
 
 ### Port Already in Use
 ```bash

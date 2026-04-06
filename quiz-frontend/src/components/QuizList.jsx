@@ -16,7 +16,8 @@ function QuizList({ setQuizId }) {
         const res = await API.get("/quiz");
         setQuizzes(res.data);
         setFilteredQuizzes(res.data);
-      } catch (err) {
+      } catch (error) {
+        console.error(error);
         setError("Failed to load quizzes");
       } finally {
         setLoading(false);

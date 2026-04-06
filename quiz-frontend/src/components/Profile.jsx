@@ -16,7 +16,8 @@ function Profile() {
     try {
       const res = await API.get("/result/stats");
       setStats(res.data);
-    } catch (err) {
+    } catch (error) {
+      console.error(error);
       setError("Failed to load statistics");
     } finally {
       setLoading(false);

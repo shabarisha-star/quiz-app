@@ -169,7 +169,7 @@ GET    /results/user/stats  Get user statistics
 **Admin User** (created automatically):
 ```
 Username: admin
-Password: (configured in db/migration/V1__initial_schema.sql)
+Password: admin
 ```
 
 ---

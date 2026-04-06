@@ -1,0 +1,10 @@
+# Ignore local artifacts for root Docker context
+node_modules
+Backend/quizapp/target
+quiz-frontend/dist
+quiz-frontend/build
+.git
+.env
+*.log
+.vscode
+.idea

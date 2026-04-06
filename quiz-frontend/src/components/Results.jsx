@@ -11,7 +11,8 @@ function Results() {
       try {
         const res = await API.get("/result/my");
         setResults(res.data);
-      } catch (err) {
+      } catch (error) {
+        console.error(error);
         setError("Failed to load results");
       } finally {
         setLoading(false);

@@ -30,12 +30,13 @@ function Login({ setLoggedIn, setPage, setUserRole }) {
         try {
           const payload = JSON.parse(atob(token.split('.')[1]));
           role = payload.role ? payload.role.replace(/^ROLE_/, "") : "USER";
-        } catch (e) {
+        } catch {
           role = "USER";
         }
       }
       setUserRole(role);
-    } catch (err) {
+    } catch (error) {
+      console.error(error);
       setError("Login failed. Please check your credentials.");
     } finally {
       setLoading(false);
